@@ -1,3 +1,4 @@
+import allure
 import pytest
 import requests
 from helpers import register_new_courier_and_return_login_password
@@ -6,20 +7,18 @@ from urls import Urls
 
 @pytest.fixture
 def courier():
-    courier_data = register_new_courier_and_return_login_password()
-
-    assert courier_data, "Не удалось создать курьера"
+    with allure.step("Создание курьера"):
+        courier_data = register_new_courier_and_return_login_password()
 
     yield courier_data
 
-    response = requests.post(Urls.LOGIN_COURIER, data={
-        "login": courier_data["login"],
-        "password": courier_data["password"]
-    })
+    with allure.step("Логин курьера для получения id"):
+        response = requests.post(Urls.LOGIN_COURIER, data={
+            "login": courier_data["login"],
+            "password": courier_data["password"]
+        })
 
-    response_json = response.json()
+        courier_id = response.json()["id"]
 
-    assert "id" in response_json
-
-    courier_id = response_json["id"]
-    requests.delete(Urls.delete_courier(courier_id))
+    with allure.step("Удаление курьера после теста"):
+        requests.delete(Urls.delete_courier(courier_id))

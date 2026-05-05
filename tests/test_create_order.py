@@ -19,7 +19,8 @@ class TestCreateOrder:
     def test_create_order_with_different_colors_success(self, color):
         payload = OrderData.order_with_color(color)
 
-        response = requests.post(Urls.CREATE_ORDER, json=payload)
+        with allure.step(f"Создание заказа с цветом: {color}"):
+            response = requests.post(Urls.CREATE_ORDER, json=payload)
 
         assert response.status_code == 201
         assert "track" in response.json()
