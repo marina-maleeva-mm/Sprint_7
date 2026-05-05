@@ -1,0 +1,16 @@
+# виртуальное окружение
+.venv/
+
+# кеши Python
+__pycache__/
+.pytest_cache/
+
+# служебные файлы
+*.pyc
+
+# allure
+allure_results/
+
+# IDE
+.vscode/
+.idea/
